@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.phone.PhoneFragment">
+
+    <EditText
+        android:id="@+id/etTelefono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/et_numero"
+        android:inputType="phone"
+        android:text="83895528" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/bt_marcar"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_call"
+            android:tooltipText="@string/tv_marcar" />
+
+        <ImageButton
+            android:id="@+id/bt_llamar"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_dial"
+            android:tooltipText="@string/tv_llamar" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/et_sms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/et_sms"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:text="Mensaje de texto que se pasa..." />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/bt_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_sms_send" />
+
+        <ImageButton
+            android:id="@+id/bt_sms_direct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_sms_direct" />
+
+        <ImageButton
+            android:id="@+id/bt_whatsapp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_menu_slideshow" />
+
+    </LinearLayout>
+
+</LinearLayout>

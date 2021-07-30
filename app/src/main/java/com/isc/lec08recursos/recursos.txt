@@ -1,0 +1,285 @@
+//Recursos para SoundFragment
+
+ private lateinit var mediaPlayerMusica: MediaPlayer
+ private var contador: Int=0
+
+
+ mediaPlayerMusica = MediaPlayer.create(requireContext(),R.raw.musica)
+
+ val mediaPlayerLeon: MediaPlayer = MediaPlayer.create(requireContext(),R.raw.leon)
+ mediaPlayerLeon.start()
+
+ if (!mediaPlayerMusica.isPlaying) {
+    mediaPlayerMusica.start()
+ }
+
+ if (mediaPlayerMusica.isPlaying) {
+   contador = mediaPlayerMusica.currentPosition
+   mediaPlayerMusica.pause()
+ }
+
+ if (!mediaPlayerMusica.isPlaying) {
+   mediaPlayerMusica.seekTo(contador)
+   mediaPlayerMusica.start()
+  }
+
+  mediaPlayerMusica.stop()
+  contador=0
+
+
+          //Recursos para PhoneFragment
+    telefono: String
+    texto: String
+
+//marcar
+  val dialIntent = Intent(Intent.ACTION_DIAL)
+  dialIntent.data = Uri.parse("tel:" + telefono)
+  requireActivity().startActivity(dialIntent)
+
+
+//llamar directo
+  val dialIntent = Intent(Intent.ACTION_CALL)
+  dialIntent.data = Uri.parse("tel:" + telefono)
+  if (requireActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) !=
+      PackageManager.PERMISSION_GRANTED
+  ) {
+      requireActivity().requestPermissions(arrayOf(Manifest.permission.CALL_PHONE), 105);
+  } else {
+     requireActivity().startActivity(dialIntent)
+  }
+
+//sms
+  val dialIntent = Intent(Intent.ACTION_CALL)
+  var uri = Uri.parse("smsto:" + telefono);
+  val intent = Intent(Intent.ACTION_SENDTO, uri);
+  intent.putExtra("sms_body", texto);
+  requireActivity().startActivity(intent);
+
+//smsDirecto
+  if (requireActivity().checkSelfPermission(Manifest.permission.SEND_SMS)!= PackageManager.PERMISSION_GRANTED) {
+      requireActivity().requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 0);
+  } else {
+    val smsManager: SmsManager = SmsManager.getDefault()
+    smsManager.sendTextMessage(telefono, null, texto, null, null)
+    Toast.makeText(context, "SMS enviado.", Toast.LENGTH_LONG).show()
+  }
+
+//WhatsApp
+val sendIntent = Intent(Intent.ACTION_VIEW)
+val uri = "whatsapp://send?phone=" + "506" + telefono + "&text=" + texto
+sendIntent.setPackage("com.whatsapp")
+sendIntent.data = Uri.parse(uri)
+startActivity(sendIntent)
+
+
+//Recursos para MapFragment
+binding.sbZoom.progress=18
+
+val latitud=binding.etLatitud.text.toString()
+val longitud=binding.etLongitud.text.toString()
+
+val zoom = binding.sbZoom.progress
+val location = Uri.parse("geo:"+latitud+","+longitud+"?z="+zoom)
+val mapIntent = Intent(Intent.ACTION_VIEW, location)
+startActivity(mapIntent)
+
+//Recursos para WebFragment
+
+val sitio = binding.etWeb.text.toString()
+
+val webpage = Uri.parse("http://"+sitio);
+val intent = Intent(Intent.ACTION_VIEW, webpage);
+startActivity(intent);
+
+
+//Recursos para MailFragment
+
+val para= binding.etCorreo.text.toString()
+val asunto= binding.etAsunto.text.toString()
+val mensaje= binding.etMensaje.text.toString()
+
+val intent = Intent(Intent.ACTION_SEND)
+intent.type = "message/rfc822"
+intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(para))
+intent.putExtra(Intent.EXTRA_SUBJECT, asunto)
+intent.putExtra(Intent.EXTRA_TEXT, mensaje)
+startActivity(intent)
+
+//Recursos para CalendarFragment
+  private var mes: Int=0
+    private var dia: Int=0
+    private var anno: Int=0
+    private var hora_fin: Int=0
+    private var minu_fin: Int=0
+    private var hora_ini: Int=0
+    private var minu_ini: Int=0
+
+val local: LocalDate = LocalDate.now()
+mes = local.getMonthValue()
+dia = local.getDayOfMonth()
+anno = local.getYear()
+binding.btFecha.setText("" + dia.toString() + "/" + mes.toString() + "/" + anno)
+
+
+//FijarHora
+if (this.binding.cbTodoDia.isChecked) {
+            binding.btHoraIni.text="08:00 a.m."
+            binding.btHoraFin.text="05:00 p.m."
+            binding.btHoraIni.setEnabled(false)
+            binding.btHoraFin.setEnabled(false)
+        } else {
+            var hora24: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            var AM_PM: String
+            AM_PM = if (hora24 < 12) {"a.m."} else {"p.m."}
+            var hora = Calendar.getInstance().get(Calendar.HOUR)
+            binding.btHoraIni.text="" + (if (hora < 10) "0$hora" else hora) + ":00 " + AM_PM
+            hora24++
+            hora++
+            AM_PM = if (hora24 < 12) {"a.m."} else {"p.m."}
+            binding.btHoraFin.text="" + (if (hora < 10) "0$hora" else hora) + ":00 " + AM_PM
+            binding.btHoraIni.setEnabled(true)
+            binding.btHoraFin.setEnabled(true)
+        }
+
+//Obtener FEcha
+        val local = LocalDate.now()
+         mes = local.monthValue-1
+         dia = local.dayOfMonth
+         anno = local.year
+
+        val recogerFecha = DatePickerDialog(
+            requireContext(),
+            { view, year, month, dayOfMonth -> //Esta variable lo que realiza es aumentar en uno el mes ya que comienza desde 0 = enero
+                anno = year
+                mes = month+1
+                dia = dayOfMonth
+                binding.btFecha.setText("" + dia.toString() + "/" + mes.toString() + "/" + anno)
+            }, anno, mes, dia
+        )
+        recogerFecha.show()
+
+//ObtenerHora
+        val localTime: LocalTime = LocalTime.now()
+        //Variables para obtener la fecha actual
+        val hora: Int = localTime.getHour()
+        val minuto: Int = localTime.getMinute()
+
+        val recogerHora = TimePickerDialog(context,
+            { view, hora, minuto ->
+                val strHora = "" + if (hora < 10) "0$hora" else hora
+                val strminuto = "" + if (minuto < 10) "0$minuto" else minuto
+                val AM_PM: String
+                AM_PM = if (hora < 12) {
+                    "a.m."
+                } else {
+                    "p.m."
+                }
+                if (tipo === 1) {
+                    hora_ini = hora
+                    minu_ini = minuto
+                    binding.btHoraIni.setText("$strHora:$strminuto $AM_PM")
+                } else {
+                    hora_fin = hora
+                    minu_fin = minuto
+                    binding.btHoraFin.setText("$strHora:$strminuto $AM_PM")
+                }
+            }, hora, minuto, false
+        )
+        recogerHora.show()
+
+//Crear Evento
+        var titulo=binding.etTitulo.text.toString()
+        var ubicacion=binding.etUbicacion.text.toString()
+        if (titulo.isNotEmpty() && ubicacion.isNotEmpty()) {
+            val calendarIntent = Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI)
+            val beginTime = Calendar.getInstance()
+            val endTime = Calendar.getInstance()
+
+            beginTime[anno, mes - 1, dia, hora_ini] = minu_ini
+            endTime[anno, mes - 1, dia, hora_fin] = minu_fin
+
+            calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.timeInMillis)
+            calendarIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.timeInMillis)
+            calendarIntent.putExtra(CalendarContract.Events.TITLE, binding.etTitulo.text.toString())
+            calendarIntent.putExtra(
+                CalendarContract.Events.EVENT_LOCATION,
+                binding.etUbicacion.text.toString()
+            )
+            startActivity(calendarIntent)
+        }
+
+
+//Recursos para LocationFragment
+    private var conPermisos:Boolean=true
+
+// cómo obtiene la información de coordenadas...
+        val fusedLocationClient: FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        if (ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION), 105)
+        }
+        if (conPermisos) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                        if (location != null) {
+                            binding.tvLatitud.text="" + location.getLatitude()
+                            binding.tvLongitud.text="" + location.getLongitude()
+                            binding.tvAltura.text="" + location.getAltitude()
+                        } else {
+                            binding.tvLatitud.text="Error"
+                            binding.tvLongitud.text="Error"
+                            binding.tvAltura.text="Error"
+                        }
+                    }
+
+        }
+
+//Para ubicarse en el mapa
+val location = Uri.parse("geo:" + binding.tvLatitud.text.toString() +
+                        "," + binding.tvLongitud.text.toString() +
+                        "?z=18")
+val mapIntent = Intent(Intent.ACTION_VIEW, location)
+startActivity(mapIntent)
+
+
+//Recursos para tomar foto
+private lateinit var tomarFotoActivity: ActivityResultLauncher<Intent>
+private lateinit var photoFile: File
+private lateinit var currentPhotoPath: String
+
+binding.foto.rotation=90f
+
+//Como toma la foto?
+tomarFotoActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data: Intent? = result.data
+                binding.foto.setImageBitmap(BitmapFactory.decodeFile(photoFile.getAbsolutePath()))
+            }
+        }
+
+//Realmente toma la foto
+val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            photoFile = createImageFile()
+            if (photoFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    requireContext(), BuildConfig.APPLICATION_ID.toString() + ".provider",
+                    photoFile)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                tomarFotoActivity.launch(intent)
+            }
+        }
+
+//Para crear el archivo temporal... para la foto
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        var image= File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",  /* suffix */
+                storageDir /* directory */)
+        currentPhotoPath = image.getAbsolutePath()
+        return image
+    }
